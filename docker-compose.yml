@@ -1,5 +1,6 @@
 services:
   mediamtx:
+    platform: linux/amd64
     build: .
     restart: unless-stopped
     container_name: liveu-relay
@@ -23,11 +24,14 @@ services:
       - "9997:9997"
 
   dashboard:
+    platform: linux/amd64
     image: node:20-alpine
     working_dir: /app
     restart: unless-stopped
-    env_file:
-      - .env
+    environment:
+      - DASH_USER=${DASH_USER}
+      - DASH_PASS=${DASH_PASS}
+      - DASH_PORT=${DASH_PORT:-3000}
     volumes:
       - ./dashboard:/app
       - ./config:/config
