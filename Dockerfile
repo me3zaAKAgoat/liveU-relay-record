@@ -6,12 +6,13 @@ RUN wget https://github.com/bluenviron/mediamtx/releases/download/v1.15.2/mediam
     mv mediamtx /usr/local/bin/ && \
     rm mediamtx_v1.15.2_linux_arm64.tar.gz
 
-# Install required tools for the upload script
-RUN apk add --no-cache aws-cli curl bash findutils coreutils
+# Install required tools for the upload script and forwarding
+RUN apk add --no-cache aws-cli curl bash findutils coreutils ffmpeg
 
 # Copy scripts
 COPY scripts/on_end.sh /usr/local/bin/on_end.sh
-RUN chmod +x /usr/local/bin/on_end.sh
+COPY scripts/forward.sh /usr/local/bin/forward.sh
+RUN chmod +x /usr/local/bin/on_end.sh /usr/local/bin/forward.sh
 
 # Copy config
 COPY mediamtx.yml /mediamtx.yml

@@ -14,7 +14,23 @@ services:
       - RECIPIENT_EMAIL=${RECIPIENT_EMAIL}
     volumes:
       - ./vod:/vod
+      - ./scripts:/scripts:ro
+      - ./config:/config
     ports:
       - "1935:1935"
+      - "8888:8888"
       - "8890:8890/udp"
       - "9997:9997"
+
+  dashboard:
+    image: node:20-alpine
+    working_dir: /app
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - ./dashboard:/app
+      - ./config:/config
+    command: sh -c "npm ci --omit=dev && node server.js"
+    ports:
+      - "${DASH_PORT:-3000}:${DASH_PORT:-3000}"

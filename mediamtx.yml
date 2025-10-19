@@ -7,6 +7,10 @@ logLevel: info
 api: yes
 apiAddress: :9997
 
+# RTSP server (needed for forwarding)
+rtsp: yes
+rtspAddress: :8554
+
 # RTMP server
 rtmp: yes
 rtmpAddress: :1935
@@ -26,21 +30,13 @@ paths:
     recordSegmentDuration: 1h # 1 hour segments
     recordDeleteAfter: 0s # Keep files indefinitely (manual cleanup)
 
-    # Forward to IRLToolkit when stream starts
-    # Replace IRL_TOOLKIT_HOST and stream key with actual values
-    # Commented out for local testing - uncomment for production
-    # runOnReady: >
-    #   ffmpeg -nostdin -loglevel warning -rtsp_transport tcp
-    #   -i $RTSP_URL
-    #   -map 0 -c copy -f flv rtmp://IRL_TOOLKIT_HOST:1935/live/STREAM_KEY
-    # runOnReadyRestart: yes
+    # Forward to IRLToolkit when stream starts (reads /config/forward.env)
+    runOnReady: /usr/local/bin/forward.sh
+    runOnReadyRestart: yes
     # Trigger upload and email when stream ends
     runOnNotReady: /usr/local/bin/on_end.sh liveu
 
-  # You can add more paths for additional cameras/sources
-  # camera2:
-  #   source: publisher
-  #   record: yes
-  #   recordPath: /vod/camera2/%Y-%m-%d_%H-%M-%S
-  #   recordFormat: fmp4
-  #   recordSegmentDuration: 3600
+  # Verification path for local testing (receives forwarded stream)
+  verify:
+    source: publisher
+    # No recording needed for test verification path
