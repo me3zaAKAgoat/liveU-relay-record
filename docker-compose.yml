@@ -25,16 +25,15 @@ services:
 
   dashboard:
     platform: linux/amd64
-    image: node:20-alpine
-    working_dir: /app
+    build:
+      context: ./dashboard
+      dockerfile: Dockerfile
     restart: unless-stopped
     environment:
       - DASH_USER=${DASH_USER}
       - DASH_PASS=${DASH_PASS}
       - DASH_PORT=${DASH_PORT:-3000}
     volumes:
-      - ./dashboard:/app
       - ./config:/config
-    command: sh -c "npm ci --omit=dev && node server.js"
     ports:
       - "${DASH_PORT:-3000}:${DASH_PORT:-3000}"
