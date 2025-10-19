@@ -1,0 +1,7 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+
+whenever you understnad that there's a redirection/reorientation from the intial spec, write the change to the according spec file of the workspace.

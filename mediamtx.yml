@@ -1,0 +1,46 @@
+# mediaMTX configuration for LiveU relay and clean-feed recording
+
+# Log level: debug, info, warn, error
+logLevel: info
+
+# API server (for monitoring)
+api: yes
+apiAddress: :9997
+
+# RTMP server
+rtmp: yes
+rtmpAddress: :1935
+
+# Paths define stream endpoints
+paths:
+  # Main LiveU ingest path
+  liveu:
+    # Accept any source (SRT, RTMP, RTSP, etc.)
+    source: publisher
+
+    # Recording configuration
+    record: yes
+    recordPath: /vod/%path/%Y-%m-%d_%H-%M-%S
+    recordFormat: fmp4
+    recordPartDuration: 1s
+    recordSegmentDuration: 1h # 1 hour segments
+    recordDeleteAfter: 0s # Keep files indefinitely (manual cleanup)
+
+    # Forward to IRLToolkit when stream starts
+    # Replace IRL_TOOLKIT_HOST and stream key with actual values
+    # Commented out for local testing - uncomment for production
+    # runOnReady: >
+    #   ffmpeg -nostdin -loglevel warning -rtsp_transport tcp
+    #   -i $RTSP_URL
+    #   -map 0 -c copy -f flv rtmp://IRL_TOOLKIT_HOST:1935/live/STREAM_KEY
+    # runOnReadyRestart: yes
+    # Trigger upload and email when stream ends
+    runOnNotReady: /usr/local/bin/on_end.sh liveu
+
+  # You can add more paths for additional cameras/sources
+  # camera2:
+  #   source: publisher
+  #   record: yes
+  #   recordPath: /vod/camera2/%Y-%m-%d_%H-%M-%S
+  #   recordFormat: fmp4
+  #   recordSegmentDuration: 3600

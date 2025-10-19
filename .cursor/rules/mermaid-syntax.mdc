@@ -1,0 +1,5 @@
+---
+alwaysApply: false
+---
+
+do not use any special syntax in any parts of the mermaid syntax that are not needed and are just explanatory.

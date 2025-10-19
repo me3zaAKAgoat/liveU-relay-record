@@ -1,0 +1,20 @@
+services:
+  mediamtx:
+    build: .
+    restart: unless-stopped
+    container_name: liveu-relay
+    environment:
+      - AWS_ACCESS_KEY_ID=${SPACES_ACCESS_KEY}
+      - AWS_SECRET_ACCESS_KEY=${SPACES_SECRET_KEY}
+      - AWS_DEFAULT_REGION=${SPACES_REGION}
+      - SPACES_BUCKET=${SPACES_BUCKET}
+      - SPACES_ENDPOINT=${SPACES_ENDPOINT}
+      - SENDGRID_API_KEY=${SENDGRID_API_KEY}
+      - SENDGRID_FROM_EMAIL=${SENDGRID_FROM_EMAIL}
+      - RECIPIENT_EMAIL=${RECIPIENT_EMAIL}
+    volumes:
+      - ./vod:/vod
+    ports:
+      - "1935:1935"
+      - "8890:8890/udp"
+      - "9997:9997"

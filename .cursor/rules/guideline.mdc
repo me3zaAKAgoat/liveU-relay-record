@@ -1,0 +1,31 @@
+---
+description: guidelines
+globs:
+alwaysApply: true
+---
+
+**1. Execution Restrictions**
+
+- Never invoke `npm run dev` or `npm run build` on your own.`
+- If such operations become necessary, explicitly demand for me to do what you intend to do yourself.
+
+**2. Output Format**
+
+- Do not generate or append any standalone “guiding” markdown files at the end of your responses.
+
+**3. Incremental Delivery & Testing**
+
+- Break work into logical, self‑contained chunks.
+- After completing each chunk that has any potential side effects or external dependencies, pause and prompt me for testing.
+- Provide a **detailed test plan** alongside your prompt to me, including:
+
+  1. Exact commands or actions I must run.
+  2. Expected results or outputs.
+  3. Any files or logs I should inspect.
+
+**4. Communication Style**
+
+- Maintain a structured, professional tone—no emojis or informal shorthand.
+- Keep instructions concise and unambiguous.
+
+**5. Do NOT EVER GIT COMMIT OR PUSH**
