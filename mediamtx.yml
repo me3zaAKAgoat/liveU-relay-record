@@ -46,7 +46,8 @@ paths:
     record: yes
     recordPath: /vod/%path/%Y-%m-%d_%H-%M-%S
     recordFormat: fmp4
-    recordPartDuration: 1s
+    recordPartDuration: 10s
+    recordMaxPartSize: 100M
     recordSegmentDuration: 1h
     recordDeleteAfter: 0s
 
