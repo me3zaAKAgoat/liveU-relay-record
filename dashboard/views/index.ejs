@@ -343,6 +343,186 @@
           padding: 6px 8px;
         }
       }
+
+
+      .stream-key-card {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .stream-key-info {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .key-name {
+        font-weight: 600;
+        color: #111827;
+        margin-bottom: 6px;
+      }
+
+      .key-meta {
+        font-size: 0.85rem;
+        color: #6b7280;
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+
+      .key-preview {
+        font-family: monospace;
+        font-size: 0.75rem;
+        background: #f9fafb;
+        padding: 4px 8px;
+        border-radius: 4px;
+        color: #111827;
+      }
+
+      .key-actions {
+        display: flex;
+        gap: 8px;
+        flex-shrink: 0;
+      }
+
+      .btn-small {
+        padding: 8px 12px;
+        font-size: 0.85rem;
+        background: #e5e7eb;
+        color: #111827;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-weight: 600;
+        width: auto;
+        margin: 0;
+      }
+
+      .btn-small:hover {
+        background: #d1d5db;
+      }
+
+      .btn-delete {
+        background: #fee2e2;
+        color: #991b1b;
+        border-color: #fecaca;
+      }
+
+      .btn-delete:hover {
+        background: #fecaca;
+      }
+
+      .btn-copy {
+        background: #dbeafe;
+        color: #1e40af;
+        border-color: #bfdbfe;
+      }
+
+      .btn-copy:hover {
+        background: #bfdbfe;
+      }
+
+      .alert {
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin-bottom: 16px;
+        font-size: 0.9rem;
+      }
+
+      .alert-success {
+        background: #dcfce7;
+        color: #166534;
+        border: 1px solid #bbf7d0;
+      }
+
+      .alert-error {
+        background: #fee2e2;
+        color: #991b1b;
+        border: 1px solid #fecaca;
+      }
+
+      .alert-info {
+        background: #dbeafe;
+        color: #1e40af;
+        border: 1px solid #bfdbfe;
+      }
+
+      .key-display-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .key-display-modal.show {
+        display: flex;
+      }
+
+      .key-display-content {
+        background: white;
+        border-radius: 12px;
+        padding: 32px;
+        max-width: 600px;
+        width: 90%;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      }
+
+      .key-display-content h3 {
+        margin: 0 0 12px 0;
+        color: #111827;
+        font-size: 1.25rem;
+      }
+
+      .key-display-content .alert {
+        margin-bottom: 16px;
+      }
+
+      .key-display-box {
+        background: #f9fafb;
+        border: 2px solid #3b82f6;
+        border-radius: 8px;
+        padding: 16px;
+        font-family: monospace;
+        word-break: break-all;
+        font-size: 0.9rem;
+        color: #111827;
+        margin: 16px 0;
+        line-height: 1.4;
+      }
+
+      .key-display-actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 20px;
+      }
+
+      .key-display-actions button {
+        flex: 1;
+        padding: 12px 16px;
+        font-size: 0.95rem;
+      }
+
+      .btn-secondary {
+        background: #e5e7eb;
+        color: #111827;
+      }
+
+      .btn-secondary:hover {
+        background: #d1d5db;
+      }
     </style>
   </head>
   <body>
@@ -353,7 +533,48 @@
       </div>
 
       <div class="content">
-        <h2>Forwarding Configuration</h2>
+        <!-- Ingest Setup Tab -->
+        <div id="ingest" class="tab-content active">
+          <h2>LiveU Ingest Configuration</h2>
+          <div class="form-section">
+            <label>RTMP Ingest URL (Recommended for stable networks)</label>
+            <input 
+              type="text" 
+              id="rtmpIngestUrl"
+              value="<%= rtmpUrl %>"
+              readonly
+              onclick="this.select()"
+            />
+            <p style="margin: 8px 0 0 0; font-size: 0.85rem; color: #6b7280;">
+              Protocol: RTMP on port 1935. Works with most streaming software.
+            </p>
+            <button type="button" onclick="copyToClipboard('rtmpIngestUrl')" style="margin-top: 8px;">Copy RTMP URL</button>
+          </div>
+
+          <div class="form-section">
+            <label>SRT Ingest URL (Recommended for unreliable networks)</label>
+            <input 
+              type="text" 
+              id="srtIngestUrl"
+              value="<%= srtUrl %>"
+              readonly
+              onclick="this.select()"
+            />
+            <p style="margin: 8px 0 0 0; font-size: 0.85rem; color: #6b7280;">
+              Protocol: SRT on port 8890. Encrypted and optimized for LiveU cameras. Better for unreliable connections.
+            </p>
+            <button type="button" onclick="copyToClipboard('srtIngestUrl')" style="margin-top: 8px;">Copy SRT URL</button>
+          </div>
+
+          <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 12px; margin-top: 16px;">
+            <p style="margin: 0; font-size: 0.9rem; color: #1e40af;">
+              <strong>Which to use?</strong> SRT is preferred for remote/mobile cameras with unstable connections. RTMP works well for fixed, stable networks.
+            </p>
+          </div>
+        </div>
+
+        <!-- Cloud OBS Forwarding -->
+        <h2>Cloud OBS Forwarding</h2>
         <div class="form-section">
           <form method="post" action="/save">
             <label for="rtmpUrl">RTMP URL</label>
@@ -362,7 +583,7 @@
               name="rtmpUrl"
               type="text"
               value="<%= cfg.RTMP_URL %>"
-              placeholder="rtmp://IRL_TOOLKIT_IP:1935/live"
+              placeholder="rtmp://irl-toolkit-host:1935/live"
             />
 
             <label for="streamKey">Stream Key (optional)</label>
@@ -378,69 +599,84 @@
           </form>
         </div>
 
+        <!-- Latest Recordings -->
         <h2>Latest Recordings</h2>
         <p><small>Storage: <%= bucket %></small></p>
 
-        <!-- Mobile Card Layout -->
-        <div class="recordings-list">
-          <% if (!items || !items.length) { %>
-          <div class="no-items">No recordings found yet.</div>
-          <% } else { %> <% items.forEach(it => { %>
-          <div class="recording-card">
-            <div class="recording-header">
-              <div class="file-info">
-                <div class="file-name"><%= it.Key %></div>
-                <div class="file-meta">
-                  <span class="file-size"><%= formatFileSize(it.Size) %></span>
-                  <span class="file-date"
-                    ><%= new Date(it.LastModified).toLocaleString() %></span
-                  >
-                </div>
-              </div>
-              <a
-                href="/presign?key=<%= encodeURIComponent(it.Key) %>"
-                class="download-button"
-                >Download</a
-              >
-            </div>
-          </div>
-          <% }) %> <% } %>
-        </div>
-
-        <!-- Desktop Table Layout -->
-        <table>
-          <thead>
-            <tr>
-              <th>File</th>
-              <th>Size</th>
-              <th>Modified</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
+          <!-- Mobile Card Layout -->
+          <div class="recordings-list">
             <% if (!items || !items.length) { %>
-            <tr>
-              <td colspan="4" class="no-items">No recordings found yet.</td>
-            </tr>
+            <div class="no-items">No recordings found yet.</div>
             <% } else { %> <% items.forEach(it => { %>
-            <tr>
-              <td class="file-key"><%= it.Key %></td>
-              <td class="file-size"><%= formatFileSize(it.Size) %></td>
-              <td class="file-date">
-                <%= new Date(it.LastModified).toLocaleString() %>
-              </td>
-              <td>
+            <div class="recording-card">
+              <div class="recording-header">
+                <div class="file-info">
+                  <div class="file-name"><%= it.Key %></div>
+                  <div class="file-meta">
+                    <span class="file-size"><%= formatFileSize(it.Size) %></span>
+                    <span class="file-date"
+                      ><%= new Date(it.LastModified).toLocaleString() %></span
+                    >
+                  </div>
+                </div>
                 <a
                   href="/presign?key=<%= encodeURIComponent(it.Key) %>"
-                  class="table-download-link"
+                  class="download-button"
                   >Download</a
                 >
-              </td>
-            </tr>
+              </div>
+            </div>
             <% }) %> <% } %>
-          </tbody>
-        </table>
+          </div>
+
+          <!-- Desktop Table Layout -->
+          <table>
+            <thead>
+              <tr>
+                <th>File</th>
+                <th>Size</th>
+                <th>Modified</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (!items || !items.length) { %>
+              <tr>
+                <td colspan="4" class="no-items">No recordings found yet.</td>
+              </tr>
+              <% } else { %> <% items.forEach(it => { %>
+              <tr>
+                <td class="file-key"><%= it.Key %></td>
+                <td class="file-size"><%= formatFileSize(it.Size) %></td>
+                <td class="file-date">
+                  <%= new Date(it.LastModified).toLocaleString() %>
+                </td>
+                <td>
+                  <a
+                    href="/presign?key=<%= encodeURIComponent(it.Key) %>"
+                    class="table-download-link"
+                    >Download</a
+                  >
+                </td>
+              </tr>
+              <% }) %> <% } %>
+            </tbody>
+          </table>
       </div>
-    </div>
+
+      <script>
+        function copyToClipboard(elementId) {
+          const element = document.getElementById(elementId);
+          element.select();
+          document.execCommand('copy');
+          
+          // Show success message
+          const originalText = event.target.textContent;
+          event.target.textContent = 'Copied!';
+          setTimeout(() => {
+            event.target.textContent = originalText;
+          }, 2000);
+        }
+      </script>
   </body>
 </html>

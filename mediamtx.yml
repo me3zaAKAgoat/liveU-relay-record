@@ -3,6 +3,22 @@
 # Log level: debug, info, warn, error
 logLevel: info
 
+# Authentication - use internal database with static credentials
+authInternalUsers:
+  - user: liveu
+    pass: ${MTX_INGEST_KEY}
+    permissions:
+      - action: publish
+        path: liveu
+      - action: read
+        path: liveu
+  # Allow anonymous access to srttest for testing
+  - user: any
+    pass:
+    permissions:
+      - action: publish
+        path: srttest
+
 # API server (for monitoring)
 api: yes
 apiAddress: :9997
@@ -15,11 +31,15 @@ rtspAddress: :8554
 rtmp: yes
 rtmpAddress: :1935
 
+# SRT server (Secure Reliable Transport)
+srt: yes
+srtAddress: :8890
+
 # Paths define stream endpoints
 paths:
   # Main LiveU ingest path
   liveu:
-    # Accept any source (SRT, RTMP, RTSP, etc.)
+    # Accept any source
     source: publisher
 
     # Recording configuration
@@ -27,16 +47,16 @@ paths:
     recordPath: /vod/%path/%Y-%m-%d_%H-%M-%S
     recordFormat: fmp4
     recordPartDuration: 1s
-    recordSegmentDuration: 1h # 1 hour segments
-    recordDeleteAfter: 0s # Keep files indefinitely (manual cleanup)
+    recordSegmentDuration: 1h
+    recordDeleteAfter: 0s
 
-    # Forward to IRLToolkit when stream starts (reads /config/forward.env)
+    # Forward to external service when stream starts
     runOnReady: /usr/local/bin/forward.sh
     runOnReadyRestart: yes
-    # Trigger upload and email when stream ends
+    # Upload and email when stream ends
     runOnNotReady: /usr/local/bin/on_end.sh liveu
 
-  # Verification path for local testing (receives forwarded stream)
-  verify:
+  # Test SRT path (no authentication required for initial debugging)
+  srttest:
     source: publisher
-    # No recording needed for test verification path
+    record: no

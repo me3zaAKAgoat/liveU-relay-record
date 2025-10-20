@@ -17,8 +17,15 @@ fi
 # Get path name from environment (MediaMTX may provide this, fallback to 'liveu')
 PATH_NAME=${MTX_PATH:-liveu}
 
-# Construct RTSP source URL manually
-RTSP_URL="rtsp://localhost:8554/${PATH_NAME}"
+# Get ingest key for internal authentication
+INGEST_KEY=${MTX_INGEST_KEY:-}
+
+# Construct RTSP source URL with authentication
+if [ -n "$INGEST_KEY" ]; then
+  RTSP_URL="rtsp://liveu:${INGEST_KEY}@localhost:8554/${PATH_NAME}"
+else
+  RTSP_URL="rtsp://localhost:8554/${PATH_NAME}"
+fi
 
 # Construct destination URL
 DEST="$RTMP_URL"

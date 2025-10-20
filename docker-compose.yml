@@ -13,15 +13,26 @@ services:
       - SENDGRID_API_KEY=${SENDGRID_API_KEY}
       - SENDGRID_FROM_EMAIL=${SENDGRID_FROM_EMAIL}
       - RECIPIENT_EMAIL=${RECIPIENT_EMAIL}
+      - MTX_INGEST_KEY=${MTX_INGEST_KEY}
     volumes:
       - ./vod:/vod
       - ./scripts:/scripts:ro
       - ./config:/config
     ports:
       - "1935:1935"
-      - "8888:8888"
+      - "8554:8554"
       - "8890:8890/udp"
       - "9997:9997"
+
+  # Test cloud OBS endpoint (simulates irltoolkit)
+  mediamtx-test-obs:
+    platform: linux/amd64
+    image: bluenviron/mediamtx:latest
+    restart: unless-stopped
+    container_name: test-obs
+    ports:
+      - "1936:1935"
+      - "8555:8554"
 
   dashboard:
     platform: linux/amd64
@@ -33,6 +44,13 @@ services:
       - DASH_USER=${DASH_USER}
       - DASH_PASS=${DASH_PASS}
       - DASH_PORT=${DASH_PORT:-3000}
+      - SPACES_ACCESS_KEY=${SPACES_ACCESS_KEY}
+      - SPACES_SECRET_KEY=${SPACES_SECRET_KEY}
+      - SPACES_REGION=${SPACES_REGION}
+      - SPACES_BUCKET=${SPACES_BUCKET}
+      - SPACES_ENDPOINT=${SPACES_ENDPOINT}
+      - MTX_INGEST_KEY=${MTX_INGEST_KEY}
+      - MTX_INGEST_HOST=${MTX_INGEST_HOST}
     volumes:
       - ./config:/config
     ports:

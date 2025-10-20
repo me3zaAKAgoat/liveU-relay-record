@@ -18,6 +18,7 @@ const REQUIRED_ENV_VARS = [
   "SPACES_REGION",
   "SPACES_BUCKET",
   "SPACES_ENDPOINT",
+  "MTX_INGEST_KEY",
 ];
 
 const missing = REQUIRED_ENV_VARS.filter((varName) => !process.env[varName]);
@@ -35,13 +36,15 @@ const { S3 } = pkg;
 const app = express();
 app.set("view engine", "ejs");
 app.set("views", path.join(process.cwd(), "views"));
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(process.cwd(), "public")));
 
-// Auth middleware (single user) - NO FALLBACKS
+// Auth middleware (single user)
 const USER = process.env.DASH_USER;
 const PASS = process.env.DASH_PASS;
 
+// Auth middleware protects all routes
 app.use((req, res, next) => {
   const creds = basicAuth(req);
   if (!creds || creds.name !== USER || creds.pass !== PASS) {
@@ -90,7 +93,24 @@ function formatFileSize(bytes) {
 
 app.get("/", async (req, res) => {
   const cfg = readForwardEnv();
-  // list latest 100 objects under cleanfeed/
+
+  // Build ingest endpoint URLs for both RTMP and SRT
+  // Domain/IP only (ports are standard and explicit)
+  const ingestDomain = process.env.MTX_INGEST_HOST || "127.0.0.1";
+  const ingestKey = process.env.MTX_INGEST_KEY;
+
+  const rtmpPort = "1935";
+  const srtPort = "8890";
+
+  // RTMP format: rtmp://domain:port/path?user=USERNAME&pass=PASSWORD
+  const rtmpUrl = `rtmp://${ingestDomain}:${rtmpPort}/liveu?user=liveu&pass=${ingestKey}`;
+
+  // SRT format: Standard Haivision streamid syntax
+  // srt://domain:port?streamid=#!::m=publish,r=path,u=user,s=pass
+  const streamidEncoded = `%23!::m=publish,r=liveu,u=liveu,s=${ingestKey}`;
+  const srtUrl = `srt://${ingestDomain}:${srtPort}?streamid=${streamidEncoded}`;
+
+  // List latest 100 objects under cleanfeed/
   let items = [];
   try {
     const data = await s3
@@ -113,7 +133,14 @@ app.get("/", async (req, res) => {
   } catch (e) {
     // ignore; render empty list with error note
   }
-  res.render("index", { cfg, items, bucket: BUCKET, formatFileSize });
+  res.render("index", {
+    cfg,
+    items,
+    bucket: BUCKET,
+    formatFileSize,
+    rtmpUrl,
+    srtUrl,
+  });
 });
 
 app.post("/save", (req, res) => {
