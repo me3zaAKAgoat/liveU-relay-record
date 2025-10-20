@@ -35,5 +35,5 @@ fi
 
 echo "[forward.sh] Available env vars: MTX_PATH=${MTX_PATH:-unset}"
 echo "[forward.sh] Forwarding from $RTSP_URL to $DEST"
-exec ffmpeg -nostdin -loglevel warning -rtsp_transport tcp -i "$RTSP_URL" -map 0 -c copy -f flv "$DEST"
+exec ffmpeg -nostdin -loglevel warning -fflags +igndts -rtsp_transport tcp -i "$RTSP_URL" -map 0 -c copy -f flv "$DEST"
 
