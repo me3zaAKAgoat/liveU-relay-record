@@ -7,6 +7,9 @@ vod/
 # Docker volumes
 data/
 
+# Configuration with secrets (forward.env, etc)
+config/
+
 # Logs
 *.log
 

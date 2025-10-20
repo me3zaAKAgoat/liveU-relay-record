@@ -65,7 +65,7 @@ const s3 = new S3({
 });
 const BUCKET = process.env.SPACES_BUCKET;
 
-const forwardEnvPath = path.join(process.cwd(), "config", "forward.env");
+const forwardEnvPath = "/config/forward.env";
 
 function readForwardEnv() {
   const out = { RTMP_URL: "", STREAM_KEY: "" };

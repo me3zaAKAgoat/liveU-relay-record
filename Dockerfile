@@ -12,7 +12,8 @@ RUN apk add --no-cache aws-cli curl bash findutils coreutils ffmpeg gettext
 # Copy scripts
 COPY scripts/on_end.sh /usr/local/bin/on_end.sh
 COPY scripts/forward.sh /usr/local/bin/forward.sh
-RUN chmod +x /usr/local/bin/on_end.sh /usr/local/bin/forward.sh
+COPY scripts/setup-config.sh /usr/local/bin/setup-config.sh
+RUN chmod +x /usr/local/bin/on_end.sh /usr/local/bin/forward.sh /usr/local/bin/setup-config.sh
 
 # Copy config
 COPY mediamtx.yml /mediamtx.yml
@@ -21,4 +22,4 @@ WORKDIR /
 
 EXPOSE 1935 7001/udp 9997
 
-CMD ["/bin/sh", "-c", "envsubst < /mediamtx.yml > /mediamtx-processed.yml && /usr/local/bin/mediamtx /mediamtx-processed.yml"]
+CMD ["/bin/sh", "-c", "setup-config.sh && envsubst < /mediamtx.yml > /mediamtx-processed.yml && /usr/local/bin/mediamtx /mediamtx-processed.yml"]

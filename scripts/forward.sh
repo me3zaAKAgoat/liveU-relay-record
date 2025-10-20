@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-# Load forwarding config
+# Load forwarding config from /config/forward.env (volume-mounted by Docker)
 if [ -f /config/forward.env ]; then
   . /config/forward.env
 fi
@@ -10,7 +10,7 @@ RTMP_URL=${RTMP_URL:-}
 STREAM_KEY=${STREAM_KEY:-}
 
 if [ -z "$RTMP_URL" ]; then
-  echo "[forward.sh] RTMP_URL not set; skipping forward"
+  echo "[forward.sh] RTMP_URL not configured; skipping forward"
   exit 0
 fi
 
