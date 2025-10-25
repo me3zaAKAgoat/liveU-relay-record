@@ -140,6 +140,8 @@ app.get("/", async (req, res) => {
     formatFileSize,
     rtmpUrl,
     srtUrl,
+    ingestDomain,
+    ingestKey,
   });
 });
 

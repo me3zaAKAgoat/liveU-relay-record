@@ -533,42 +533,77 @@
       </div>
 
       <div class="content">
-        <!-- Ingest Setup Tab -->
+        <!-- LiveU Configuration -->
         <div id="ingest" class="tab-content active">
-          <h2>LiveU Ingest Configuration</h2>
+          <h2>LiveU Camera Configuration</h2>
+          
+          <!-- RTMP Configuration -->
           <div class="form-section">
-            <label>RTMP Ingest URL (Recommended for stable networks)</label>
+            <h3 style="margin: 0 0 16px 0; color: #111827; font-size: 1.1rem;">RTMP Configuration (Stable Networks)</h3>
+            
+            <label>Server URL/Port</label>
             <input 
               type="text" 
-              id="rtmpIngestUrl"
-              value="<%= rtmpUrl %>"
+              id="rtmpServer"
+              value="<%= ingestDomain %>:1935"
               readonly
               onclick="this.select()"
             />
-            <p style="margin: 8px 0 0 0; font-size: 0.85rem; color: #6b7280;">
-              Protocol: RTMP on port 1935. Works with most streaming software.
+            
+            <label>Stream ID/Key</label>
+            <input 
+              type="text" 
+              id="rtmpStreamId"
+              value="liveu?user=liveu&pass=<%= ingestKey %>"
+              readonly
+              onclick="this.select()"
+            />
+            
+            <div style="display: flex; gap: 8px; margin-top: 12px;">
+              <button type="button" onclick="copyToClipboard('rtmpServer')" style="flex: 1; margin: 0;">Copy Server</button>
+              <button type="button" onclick="copyToClipboard('rtmpStreamId')" style="flex: 1; margin: 0;">Copy Stream ID</button>
+            </div>
+            
+            <p style="margin: 12px 0 0 0; font-size: 0.85rem; color: #6b7280;">
+              Use these values in your LiveU dashboard's RTMP settings. Works best for stable, fixed connections.
             </p>
-            <button type="button" onclick="copyToClipboard('rtmpIngestUrl')" style="margin-top: 8px;">Copy RTMP URL</button>
           </div>
 
+          <!-- SRT Configuration -->
           <div class="form-section">
-            <label>SRT Ingest URL (Recommended for unreliable networks)</label>
+            <h3 style="margin: 0 0 16px 0; color: #111827; font-size: 1.1rem;">SRT Configuration (Unreliable Networks)</h3>
+            
+            <label>Server URL/Port</label>
             <input 
               type="text" 
-              id="srtIngestUrl"
-              value="<%= srtUrl %>"
+              id="srtServer"
+              value="<%= ingestDomain %>:8890"
               readonly
               onclick="this.select()"
             />
-            <p style="margin: 8px 0 0 0; font-size: 0.85rem; color: #6b7280;">
-              Protocol: SRT on port 8890. Encrypted and optimized for LiveU cameras. Better for unreliable connections.
+            
+            <label>Stream ID</label>
+            <input 
+              type="text" 
+              id="srtStreamId"
+              value="#!::m=publish,r=liveu,u=liveu,s=<%= ingestKey %>"
+              readonly
+              onclick="this.select()"
+            />
+            
+            <div style="display: flex; gap: 8px; margin-top: 12px;">
+              <button type="button" onclick="copyToClipboard('srtServer')" style="flex: 1; margin: 0;">Copy Server</button>
+              <button type="button" onclick="copyToClipboard('srtStreamId')" style="flex: 1; margin: 0;">Copy Stream ID</button>
+            </div>
+            
+            <p style="margin: 12px 0 0 0; font-size: 0.85rem; color: #6b7280;">
+              Use these values in your LiveU dashboard's SRT settings. Recommended for mobile/unreliable connections.
             </p>
-            <button type="button" onclick="copyToClipboard('srtIngestUrl')" style="margin-top: 8px;">Copy SRT URL</button>
           </div>
 
           <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 12px; margin-top: 16px;">
             <p style="margin: 0; font-size: 0.9rem; color: #1e40af;">
-              <strong>Which to use?</strong> SRT is preferred for remote/mobile cameras with unstable connections. RTMP works well for fixed, stable networks.
+              <strong>Instructions:</strong> Copy the Server URL/Port and Stream ID values into your LiveU camera's streaming configuration. SRT is preferred for remote/mobile cameras with unstable connections.
             </p>
           </div>
         </div>
